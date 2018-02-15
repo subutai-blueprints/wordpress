@@ -4,7 +4,8 @@
     - copy:
         src: .my.cnf
         dest: ~/.my.cnf
-        mode: 0644
+        owner: root
+        mode: 0600
 
     - mysql_db:
        name: "{{ dbName }}"
