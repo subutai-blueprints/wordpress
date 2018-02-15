@@ -1,0 +1,40 @@
+---
+- hosts: db
+  tasks:
+    - copy:
+        src: .my.cnf
+        dest: ~/.my.cnf
+        mode: 0644
+
+    - mysql_db:
+       name: "{{ dbName }}"
+       state: present
+
+    # Creates database user 'dbUser' and password 'dbPassword' with all database privileges and 'WITH GRANT OPTION'
+    - mysql_user:
+        name: "{{ dbUser }}"
+        password: "{{ dbPassword }}"
+        priv: '*.*:ALL,GRANT'
+        state: present
+        host: "%"
+
+    - name: stop mysql service
+      shell: service mysql stop
+
+    - name: copy mysql conf file
+      template: src="mysqld.cnf"  dest="/etc/mysql/mysql.conf.d/mysqld.cnf" mode=644
+
+    - name: start mysql service
+      shell: service mysql start       
+
+- hosts: wordpress
+  tasks:
+  - name: stop apache
+    shell: systemctl stop apache2.service
+
+  - name: Copy wp-config.php.j2
+    template: src="wp-config.php.j2"   dest="/var/www/html/wp-config.php"   mode=600
+
+  - name: start apache
+    shell: systemctl start apache2.service
+
