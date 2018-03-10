@@ -51,12 +51,14 @@
     "groups": [
       {
         "name": "db",
+        "python-interpreter": "/usr/bin/python3",
         "hostnames": [
           "mysql"
         ]
       },
       {
         "name": "wordpress",
+        "python-interpreter": "/usr/bin/python3",
         "hostnames": [
           "wordpress"
         ]
